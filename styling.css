@@ -1,0 +1,493 @@
+
+/*for counter stuff */
+/*html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+#jspsych-target { width: 100%; height: 100%;}*/
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.required{
+    display: none;
+}
+
+
+.mybutton{
+    background: blue; 
+    border: none; 
+    color: white; 
+    padding: 10px 28px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer;
+    border-radius: 20px; 
+    border: 4px solid transparent;
+    position: relative;
+    left: 75%;
+}
+
+/*
+.jspsych-content{
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    width: 50%; 
+    height: 50%; 
+}
+*/
+
+.jspsych-content {
+    position:absolute;
+    top: 30%;
+    width: 100%;
+    height: 100%;
+}
+
+
+#jspsych-html-keyboard-response-stimulus{
+    height: inherit;
+    width: inherit;
+}
+
+#jspsych-html-button-response-stimulus{
+    height: inherit;
+    width: inherit;
+}
+
+#jspsych-html-slider-response-wrapper{
+    height: inherit;
+    width: inherit;
+}
+
+#jspsych-html-slider-response-stimulus{
+    height: inherit;
+    width: inherit;
+}
+
+#jspsych-survey-text-preamble{
+    height: inherit;
+    width: inherit;
+}
+
+#jspsych-survey-text-form{
+   position: absolute;
+   top: 25%;
+   left: 30%;
+}
+
+#jspsych-html-slider-response-next{
+    position: absolute;
+    margin-bottom: 25%;
+}
+
+.main_div {
+    position: absolute;
+    bottom:30%;
+    left: 0%;
+    width: inherit;
+    height:inherit;
+}
+
+
+
+.jspsych-survey-multi-choice-option {
+    display: flex; /* Use Flexbox */
+    flex-direction: row; /* Arrange children in a row */
+}
+
+.jspsych-survey-multi-choice-text {
+    order: 1; /* Make the label appear after the input */
+    padding-left: 10px;
+}
+
+
+
+.left_stim{
+    position: absolute;
+    top: 15%;
+    left: 32%;
+}
+
+.right_stim{
+    position: absolute;
+    right: 32%;
+    top: 15%;}
+
+.central_stim{
+    height: 28vh;
+    width:12vw;}
+
+.central_stim_attr{
+    position: absolute;
+    top: 15%;
+    left: 44%;
+    height: 28vh;
+    width:12vw;
+}
+
+.central_stim_selected{
+    height: 28vh;
+    width: 12vw;
+    border:4px solid yellow;
+}
+
+.central_stim_non_selected{
+    height: 28vh;
+    width: 12vw;
+    border:4px solid white;
+}
+
+/*
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+    }
+.central_stim_selected{
+    height: 28vh;
+    width: 12vw;
+    border:5px solid yellow;
+    animation: fadeIn 2s;
+    }
+*/
+
+
+
+.button_instr{
+    background-color: #e7e7e7;
+    color: black;
+    border-radius: 15px;
+    padding: 10px 25px;
+    text-align: center;
+    box-shadow: 0 9px #999;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    left: 24vw;
+}
+
+.button_instr:hover {background-color: #A9A9A9}
+.button_instr:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button_choice, #left_button, #right_button, #left_button_first, #right_button_first{
+    background-color: #e7e7e7;
+    color: black;
+    border-radius: 15px;
+    padding: 10px 25px;
+    text-align: center;
+    box-shadow: 0 9px #999;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    }
+
+
+#left_button{
+    position: relative;
+    bottom: 15vh;
+    left: 4vw;
+}
+
+#right_button{
+    position: relative;
+    bottom: 15vh;
+    left: 0vw;
+}
+
+#left_button_first{
+    position: relative;
+    bottom: 15vh;
+    left: 15vw;
+}
+
+#right_button_first{
+    position: relative;
+    bottom: 15vh;
+    left: 31vw;
+}
+
+
+/* Slider stuff */
+#customTick2 {
+display: none;
+position: absolute;
+z-index: 1;
+top: 0;
+left: 0;
+}
+
+
+.slider_tick_container {
+position: absolute;
+bottom: 52%;
+left: 28%;
+/*animation: fadeIn 2s;*/
+}
+
+/*
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+*/
+#customSlider2 {
+    width: 42vw; /* adjust as needed */
+    height: auto; /* Keeps the aspect ratio */
+    position: absolute;
+  }  
+
+
+.rightTdVas{
+/* white-space: nowrap; */
+font-size: 2.2vh;
+line-height: 1em;
+position: absolute;
+bottom:38%;
+right:25%;
+}
+
+.leftTdVas{
+    /* white-space: nowrap; */
+    font-size: 2.2vh;
+    line-height: 1em;
+    position: absolute;
+    bottom:38%;
+    left:25%;
+    }
+
+#mySlider5_value{
+    font-size: 2.8vh;
+    position: absolute;
+    bottom: 40%;
+    left: 49.3%;
+    }
+
+#jspsych-html-slider-response-next{
+    font-size: 2.5vh;
+    position: absolute;
+    bottom: 15%;
+    left: 46.4%;
+}
+
+
+/* BUTTON STUFF */
+
+#jspsych-html-button-response-btngroup{
+    position: absolute;
+    top:30%;
+    left: 20%;
+}
+
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: grid;
+    font-size: 16px;
+    margin: 4px 2px;
+    
+    cursor: pointer;
+    /* float: left; */
+    /* position: absolute;
+    top: 0px;
+    right: 1500px;
+    width: 100px;
+    height: 50px; */
+    position: relative;
+    left: 30px;
+    }
+.button1 {
+background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px;*/
+margin: 0px 10px;
+
+/* margin: 70px 70px; */
+cursor: pointer;
+
+/* position: relative;
+right: -250px;
+top: 0px; */
+
+}
+.button1:hover {background-color: #A9A9A9}
+.button1:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button2 {
+background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: -250px;
+top: 0px; */
+}
+.button2:hover {background-color: #A9A9A9}
+.button2:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button3 {
+background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: -250px;
+top: 0px; */
+}
+.button3:hover {background-color: #A9A9A9}
+.button3:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button4 {
+background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: 300px;
+top: 70px; */
+}
+.button4:hover {background-color: #A9A9A9}
+.button4:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button5 {
+background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: 300px;
+top: 70px; */
+}
+.button5:hover {background-color: #A9A9A9}
+.button5:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button6 {
+background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: 300px;
+top: 70px; */
+}
+.button6:hover {background-color: #A9A9A9}
+.button6:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.button7 {
+    background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: 300px;
+top: 70px; */
+}
+.button7:hover {background-color: #A9A9A9}
+.button7:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+
+.instr_button{
+    font-size: 2.5vh;
+    position: absolute;
+    top: 25vh;
+    left: 26vw;
+}
+
+
+/* Text classes */
+
+.prompt{
+    font-size: 24px;
+}
+
+
+#attrac_scale{
+    position: absolute;
+    left: 35.5%;
+    top: 5%;
+}
