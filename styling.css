@@ -79,9 +79,10 @@ body {
 }
 
 #jspsych-survey-text-form{
-   position: absolute;
-   top: 25%;
-   left: 30%;
+   position: inherit;
+   width: inherit;
+   height: inherit;
+   top: 15%;
 }
 
 #jspsych-html-slider-response-next{
@@ -170,10 +171,10 @@ body {
     border: none;
     font-size: 30px;
     cursor: pointer;
-    position:relative;
+    position:absolute;
     left: 24vw;
+    top: 25vh;;
     padding: .5%;
-    top: 15vh;
 }
 
 .button_instr:hover {background-color: #A9A9A9}
