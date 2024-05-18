@@ -98,6 +98,14 @@ body {
     height:inherit;
 }
 
+.main_div_instr {
+    position: absolute;
+    bottom:40%;
+    left: 0%;
+    width: inherit;
+    height:inherit;
+}
+
 
 
 .jspsych-survey-multi-choice-option {
