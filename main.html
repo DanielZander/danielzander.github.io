@@ -389,8 +389,7 @@ for (let j = 0; j < all_m_nm.length; j++){
     choices: jsPsych.NO_KEYS,
     trial_duration: 1,
     stimulus: function(){return "<div class='main_div'>"+
-    "<p style = 'font-size: 24px;'> How strong is the preference for the face you selected? </p>" +
-  "<img class='central_stim' src='"+all_m_nm[attr_trial_count]+"' </img>" +
+  "<img class='central_stim_attr' src='"+all_m_nm[attr_trial_count]+"' </img>" +
   "</div>"},
     on_finish: function(data){
         data.attr_trial = attr_trial_count;
@@ -1036,11 +1035,10 @@ for (var i = 0; i < 60; i++){// 66 - 7 filler pairs.
         }
     };
 
+
     var cardback_choice2 = {
     type: "html-button-response",
-    margin_vertical: "0px",
-    margin_horizontal: "190px",
-    button_html: button_choice,
+    button_html: button_choice_first,
     choices: ["Left face","Right face"],
     stimulus:
     "<div class = 'main_div'>" +
