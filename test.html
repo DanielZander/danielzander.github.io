@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="jspsych/jspsych.js"></script>
+    <link href="jspsych/css/jspsych.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styling.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych/plugins/jspsych-image-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych/plugins/jspsych-image-slider-response.js"></script>
+    <script src="jspsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-resize.js"></script>
+    <script src="jspsych\plugins\jspsych-call-function.js"></script>
+    <script src="jspsych\plugins\jspsych-image-slider-response.js"></script>
+    <script src= "jspsych\plugins\jspsych-html-slider-response-custom.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-likert.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-text.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-text-custom.js"></script>
+    <script src="jspsych\plugins\jspsych-html-vas-custom.js"></script>
+</head>
+<body>
+</body>
+
+<script>
+
+
+
+var timeline = [];
+
+var pics = ["img/1 AF-205.jpg", "img/1 AF-224.jpg"];
+var radio_rating = 0;
+var sum_dur = 0;
+var confidence_dur = 0;
+var choice_dur = 0;
+
+var inputs = {
+    type: 'resize',
+    item_width: 3 + 3/8,
+    item_height: 2 + 1/8,
+    prompt: "<h1> Calibration </h1><p>Click and drag the lower right corner of the box until the box is the same size as a credit card held up to the screen. <br> When the rectangle has the same size as the card, press continue</p>",
+    pixels_per_unit: 150,
+};
+timeline.push(inputs);
+
+var instruction_attractiveness = {
+        type: "html-keyboard-response",
+        stimulus: "<div class='main_div'>"+
+        "<h1>First part: Attractiveness Rating</h1>"+
+        "<p style = 'font-size: 22px;'>In this first part of the experiment you will be asked to rate how attractive you find different faces. Each face will appear only for a limited time (3 seconds) and you will then be able to give your rating on scale from 0-100."+
+        "<p style = 'font-size: 22px;'>Try to pay attention so that you do not miss the faces!</p>"+
+        "<p style = 'font-size: 22px;'>Press any key when you are ready</p>"+
+        "</div>",
+        data: {screenid: 'instruction_attractiveness'},
+      };
+timeline.push(instruction_attractiveness);
+
+
+var delib_attr = {
+    type: "html-keyboard-response",
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 3000,
+    stimulus: function(){return "<div class='main_div'>"+
+    "<p style = 'font-size: 24px;'> How strong is the preference for the face you selected? </p>" +
+  "<img class='central_stim' src='"+pics[0]+"' </img>" +
+  "</div>"}
+}
+timeline.push(delib_attr);
+
+button_attr=['<button class="button_attr">Submit rating</button>'];    
+    var scale = {
+        type: 'html-vas-custom',
+        stimulus: function(){
+            this_stim=
+        "<div class = 'main_div'>" +      
+            "<p style = 'font-size: 24px;'>How attractive do you think this face is? </p>" +
+                "<img class='central_stim' src='img/cardback2o.jpg'></img>" +
+
+                "<table>" +
+                    "<tr>" +
+                        "<td class='leftTdVas'>0<br>Not very<br>Attractive</td>" +
+                        "<td>" +
+                            "<div class = 'slider_tick_container'>"+
+                                "<img src='responseScales/vas_banded.png' id='customSlider2'>" +
+                                "<div id='customTick2' class='customTick2'>" +
+                                '<img id="customTick2_fig" src="responseScales/tick2.png" width="30px" height="30px">'+
+                        "</td>" +
+                        "<td class='rightTdVas'>100<br>Very<br>Attractive</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td colspan='3'>" +
+                            "<div id='mySlider5_value'></div>" +
+                        "</td>" +
+                    "</tr>" +
+                    "</div>"+
+                "</table>"+
+        "</div>"
+
+        return this_stim
+        },
+        require_movement:true,
+        button_html: button_attr
+}
+timeline.push(scale);
+
+button_instr=['<button class="button_instr">Continue</button>'];        
+var start_exp = {
+
+        type: "html-button-response",
+        choices: ["Continue"],
+        button_html: button_instr,
+        stimulus: "<div class = 'main_div'>"+
+        "<h1>Instructions main task</h1>"+
+        "<p style = 'font-size: 22px;'>In this part, you will be presented with pairs of cards with faces on. The cards will be presented to you face up, and you will be able to see both faces for a brief period of time.</p>"+
+      "<p style = 'font-size: 22px;'> Once the cards turn face down, your task is to select the card which has the face you find the most attractive. </p>"+
+      " <p style = 'font-size: 22px;'>After making each choice, you will be asked to indicate how much more you preferred the face you selected over the other. </p>"+
+      "<p style = 'font-size: 22px;'>You will then be asked to give an open ended explanation for you choice. You can mention any reasons that mattered for your decision. You are not restricted to specific facial features that will be mentioned later.</p>"+
+       "<p style = 'font-size: 22px;'>You will need to input a minimum of 15 and a maxmium of 240 characters.</p>"+
+      " <p style = 'font-size: 22px;'>Finally, the face you selected will be shown to you again and you will be asked </p>"+
+       " <p style = 'font-size: 22px;'to select what feature of the face, from a number of fixed options, mattered most for your choice.</p>"+
+       "<p style = 'font-size: 22px;'>As the faces will only be presented for a brief period of time, please attend to them carefully</p>"+
+       "<p style = 'font-size: 22px;'> Click the continue button only when you are ready</p>" + "</div>",
+
+        data: {screen_id: 'start_exp'}
+        };
+
+timeline.push(start_exp);
+
+var fixation = {
+    type: 'html-keyboard-response',
+    stimulus: '<span style="font-size:40px;">+</span>',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 2000,
+    data: {screen_id: "fixation"}
+};
+timeline.push(fixation);
+
+var delibiration = {
+    type: "html-keyboard-response",
+    stimulus: function(){
+
+        stim =  "<div class = 'main_div'>" +
+             "<div class='left_stim'><img class = 'central_stim' src='"+pics[0]+"' </img> </div>" +
+            "<div class='right_stim'><img class = 'central_stim' src='"+pics[1]+"' </img> </div>" +
+            "</div>"
+        
+    
+    return stim
+    
+    },
+    choices: jsPsych.NO_KEYS,
+        trial_duration: 4000,
+};
+timeline.push(delibiration);
+
+
+button_choice_first=['<button id = "left_button_first">Left</button>','<button id = "right_button_first">Right</button>'];
+
+var choice = {
+    type: 'html-button-response',
+    button_html: button_choice_first,
+    choices: ["Left Face","Right Face"],
+    stimulus: 
+            "<div class = 'main_div'>" +
+            "<div class='left_stim'><img class = 'central_stim' src='"+'img/cardback1o.jpg'+"' </img> </div>" +
+            "<div class='right_stim'><img class = 'central_stim' src='"+'img/cardback2o.jpg'+"' </img> </div>" +
+            "</div>",
+    on_finish: function(data){
+        choice_dur=data.rt;
+    }
+}
+
+timeline.push(choice);
+
+
+myRadio = document.querySelector("input[name='sl2']");
+    function radioClick(v) {
+      let rb = 'sl2_' + v;  // match the id of each option, here "sl2_1", "sl2_2", etc.
+      document.getElementById(rb).checked = true;
+      radio_rating=v;
+      document.querySelector('#jspsych-html-slider-response-next').disabled = false;//enable button to continue
+    }
+
+
+
+button_conf=[
+    '<button class="button_confidence">Continue</button>'];
+
+var scale = {
+    type: 'html-vas-custom',
+    stimulus: function(){
+        stim = 
+
+        "<div class = 'main_div'>" +        
+        "<div class='left_stim'><img class = 'central_stim_selected' src='"+'img/cardback1o.jpg'+"' </img>  </div>" +
+        "<div class='right_stim'><img class = 'central_stim' src='"+'img/cardback2o.jpg'+"' </img> </div>"+
+
+
+                "<table>" +
+                    "<tr>" +
+                        "<td class='leftTdVas'>0<br>Not very<br>strong</td>" +
+                        "<td>" +
+                            "<div class = 'slider_tick_container'>"+
+                                "<img src='responseScales/vas_banded.png' id='customSlider2'>" +
+                                "<div id='customTick2' class='customTick2'>" +
+                                '<img id="customTick2_fig" src="responseScales/tick2.png" width="30px" height="30px">'+
+                        "</td>" +
+                        "<td class='rightTdVas'>100<br>Very<br>strong</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td colspan='3'>" +
+                            "<div id='mySlider5_value'></div>" +
+                        "</td>" +
+                    "</tr>" +
+                    "</div>"+
+                "</table>"+
+        "</div>"
+        return stim
+    },
+    require_movement:true,
+    button_label:"Continue",
+    button_html: button_conf,
+    on_finish: function(data){
+        confidence_dur=data.rt;
+        sum_dur= choice_dur+confidence_dur;
+        }
+}
+
+
+timeline.push(scale);
+
+var delay_cardback2 = {
+        type: "html-keyboard-response",
+        stimulus:function(){
+        var stim = 
+            "<div class = 'main_div'>" +     
+            "<p>  Please wait </p>" + 
+            "<div class='left_stim'><img class = 'central_stim_selected' src='"+'img/cardback1o.jpg'+"' </img>  </div>" +
+            "<div class='right_stim'><img class = 'central_stim' src='"+'img/cardback2o.jpg'+"' </img> </div>"+
+            "</div>"
+        return stim
+        },
+
+        choices: jsPsych.NO_KEYS,
+        data: {screen_id: "delay_cardback2"},
+        trial_duration:function(){
+        var dur= null;
+            (function(){
+                dur=7000-sum_dur;
+                if (dur<0) {dur=0};})()
+        console.log(dur,"dur computed on cardback2")
+        return dur}
+        }; 
+
+timeline.push(delay_cardback2);
+
+var survey = {
+  type: 'survey-text-custom',
+  preamble: function() {
+    var stim = 
+        "<div class = 'main_div'>" +     
+            "<div class='left_stim'><img class = 'central_stim_selected' src='"+'img/cardback1o.jpg'+"' </img>  </div>" +
+            "<div class='right_stim'><img class = 'central_stim' src='"+'img/cardback2o.jpg'+"' </img> </div>"+
+        "</div>"
+
+        return stim
+        },
+    
+  questions: [
+    {
+      prompt: 
+              "<p class = 'explanation_text' ><strong>Explain briefly why you chose this face.</strong></p>" +
+              "<p class = 'explanation_text2'><strong>Text box will stop responding when the limit of 240 characters has been reached!</strong></p>",
+      rows: 5
+    }
+  ]
+};
+timeline.push(survey);
+
+
+
+button_array=[
+    '<button class="button1">Mouth</button>','<button class="button2">Eyes</button>',
+    '<button class="button3">Nose</button>','<button class="button4">Proportion</button>',
+    '<button class="button5">Skin</button>','<button class="button6">Shape</button>',
+    '<button class="button7">I actually prefer the other face</button>'];
+
+    var feedback_array = {
+    type: "html-button-response",
+    button_html: button_array,
+    choices: ["Mouth", "Eyes","Nose", "Proportion", "Skin","Shape","I actually prefer the other face"],
+    stimulus:function(){
+        var stim = 
+        "<div class = 'main_div'>" +    
+            "<p><strong>Select one feature which best explains your choice.</strong></p>" + 
+            "<div class='left_stim'><img class = 'central_stim_selected' src='"+'img/cardback1o.jpg'+"' </img>  </div>" +
+            "<div class='right_stim'><img class = 'central_stim' src='"+'img/cardback2o.jpg'+"' </img> </div>"+
+        "</div>"
+    return stim
+    },
+    data: {screen_id: "feedback"},
+    trial_gap: 200
+}
+timeline.push(feedback_array);
+
+
+var choice2_instruction = {
+type: "html-keyboard-response",
+stimulus: "<div class = 'main_div'>" +   
+"<h1>Instructions for Second Round choice</h1>"+
+"<p style = 'font-size: 22px;'>Great job so far, you are almost done!"+
+"<p style = 'font-size: 22px;'>In this last part you will be asked to choose again between faces based on how attractive you think they are, but this time you will not have to explain the reasons behind your choice.</p> "+
+"<p style = 'font-size: 22px;'>Press any key when you are ready.</p>"+
+"</div>"
+}
+timeline.push(choice2_instruction);
+
+
+var choice2_deliberation = {
+    type: "html-keyboard-response",
+    stimulus: function(){
+ 
+            stim="<div class = 'main_div'>" +
+            "<div class='left_stim'><img class='central_stim' src='"+pics[0]+"' </img></div>" +
+            "<div class='right_stim'><img class='central_stim' src='"+pics[1]+"' </img></div>" +
+            "</div>"
+        return stim},
+
+    choices: jsPsych.NO_KEYS,
+    data: {screen_id: "deliberation2"},
+    trial_duration:4000
+            }
+
+
+
+
+var cardback_choice2 = {
+    type: "html-button-response",
+    choices: ["Left face","Right face"],
+    button_html: button_choice_first,
+    stimulus:
+    "<div class = 'main_div'>" +
+            "<p style = 'font-size: 24px;'> Which face do you find the most attractive? </p>" +
+            "<div class='left_stim'><img class = 'central_stim' src='"+'img/cardback1o.jpg'+"' </img> </div>" +
+            "<div class='right_stim'><img class = 'central_stim' src='"+'img/cardback2o.jpg'+"' </img> </div>" +
+            "</div>"
+}
+timeline.push(choice2_deliberation, cardback_choice2);
+
+
+jsPsych.init({
+    show_progress_bar: true,
+    timeline: timeline,
+})
+
+
+
+</script>
+</html>
