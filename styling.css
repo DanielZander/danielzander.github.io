@@ -1,0 +1,154 @@
+
+/*for counter stuff */
+html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+#jspsych-target { width: 100%; height: 100%;}
+
+.required{
+    display: none;
+}
+
+.main_div{
+    width: auto;
+    height: 100%;
+    margin:0 auto;
+}
+
+.mybutton{
+    background: blue; 
+    border: none; 
+    color: white; 
+    padding: 10px 28px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer;
+    border-radius: 20px; 
+    border: 4px solid transparent;
+    position: relative;
+    left: 75%;
+}
+
+#jspsych-content{
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%; /* Adjust this as needed */
+    height: 50%; /* Adjust this as needed */
+}
+
+.countdown-container {
+    display: none;
+    position: absolute;
+    right: 10%;
+    top: 10%;
+    height: 5%; /* Adjust the height as needed */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+#count_down_text,
+#count_down_number {
+
+    font-size: 25px;
+    display: inline-block;
+}
+
+#count_down_number {
+    margin-left: 5px; /* Adjust this value to your preference */
+}
+
+
+.countdown-container_block3 {
+    display: none;
+    position: absolute;
+    right: 10%;
+    top: 10%;
+    height: 5%; /* Adjust the height as needed */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+
+}
+
+#count_down_text_block3,
+#count_down_number_block3 {
+
+    font-size: 25px;
+    display: inline-block;
+}
+
+#count_down_number_block3 {
+    margin-left: 5px; /* Adjust this value to your preference */
+}
+
+
+.jspsych-survey-multi-choice-option {
+    display: flex; /* Use Flexbox */
+    flex-direction: row; /* Arrange children in a row */
+}
+
+.jspsych-survey-multi-choice-text {
+    order: 1; /* Make the label appear after the input */
+    padding-left: 10px;
+}
+
+#input-0 {
+    font-size: 20px; /* Adjust as needed */
+}
+
+.jspsych-btn{
+    width: 150px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    font-size: 20px; /* Adjust the font size as needed */
+}
+
+
+.button1 {
+    background-color: #e7e7e7;
+   color: black;
+   border-radius: 15px;
+   padding: 15px 32px;
+   text-align: center;
+   box-shadow: 0 9px #999;
+   border: none;
+   font-size: 16px;
+   /* margin: 4px 10px;*/
+   margin: 0px 10px;
+}
+
+.button1:hover {background-color: #A9A9A9}
+.button1:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+
+.button2 {
+ background-color: #e7e7e7;
+color: black;
+border-radius: 15px;
+padding: 15px 32px;
+text-align: center;
+box-shadow: 0 9px #999;
+border: none;
+font-size: 16px;
+/* margin: 4px 10px; */
+margin: 0px 10px;
+cursor: pointer;
+/* position: relative;
+right: -250px;
+top: 0px; */
+}
+.button2:hover {background-color: #A9A9A9}
+.button2:active {
+background-color: #A9A9A9;
+box-shadow: 0 5px #666;
+transform: translateY(4px);}
+
+.question_number{
+    font-size: 24px;
+}

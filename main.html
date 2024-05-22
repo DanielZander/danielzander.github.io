@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="jspsych/jspsych.js"></script>
+    <link href="jspsych/css/jspsych.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styling.css">
+    <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych/plugins/jspsych-image-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-image-slider-response.js"></script>
+    <script src="jspsych/plugins/jspsych-resize.js"></script>
+    <script src="jspsych\plugins\jspsych-call-function.js"></script>
+    <script src="jspsych\plugins\jspsych-image-slider-response.js"></script>
+    <script src= "jspsych\plugins\jspsych-html-slider-response-custom.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-likert.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-text.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-text-custom.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-multi-choice.js"></script>
+    <script src="jspsych\plugins\jspsych-survey-multi-choice-custom.js"></script>
+</head>
+<body>
+    <div id="jspsych-target"></div>
+    <!-- Styling of timer -->
+    <div class="countdown-container" style = "display: none;">
+    <p id = "count_down_text" >Time left: </p>
+    <p id = "count_down_number" >10:00</p>
+    </div>
+
+    <div class="countdown-container_block3" style = "display: none;">
+        <p id = "count_down_text_block3" >Time left: </p>
+        <p id = "count_down_number_block3" >10:00</p>
+        </div>
+</body>
+
+<script> 
+
+//------------------------------------------------CONSTANTS-----------------------------------------------------------------//
+const nog_answers = ["A) in statement (1) ALONE, but not in statement (2) alone", "B) in statement (2) ALONE, but not in statement (1) alone", "C) in statement (1) TOGETHER with statement (2)", "D) in EACH statement ALONE", "E) in NEITHER statement (1) NOR statement (2)"]
+const nog_answers_dict = {A: "<p style = 'color: green'>A) in statement (1) ALONE, but not in statement (2) alone</p>", 
+                          B: "<p style = 'color: green'>B) in statement (2) ALONE, but not in statement (1) alone</p>", 
+                          C: "<p style = 'color: green'>C) in statement (1) TOGETHER with statement (2)</p>", 
+                          D: "<p style = 'color: green'>D) in EACH statement ALONE</p>", 
+                          E: "<p style = 'color: green'>E) in NEITHER statement (1) NOR statement (2)</p>"}
+const questions = [
+//7a
+"<div class = 'main_div'>" +
+"<p>A school buys a box of apples and a box of pears, totalling two hundred fruits, for the schoolchildren to eat as a snack. Unfortunately, some of the fruits turn out to be rotten. <strong> How many fruits are rotten?</strong></p>"+
+
+"<p>(1)	1/6 of the pears and 1/8 of the apples are rotten.</p>"+
+"<p>(2)	Fifteen per cent of the fruits are rotten."+
+"<br><br>"+
+"<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//11a
+"<div class = 'main_div'>" +
+"<p>A museum bought a number of new sculptures at a particular time. The purchase resulted in a 25 per cent increase in the total value of all the museum’s sculptures. <strong> How many new sculptures were purchased?</strong> </p>"+
+"<p>(1)	Before the purchase, the museum’s 40 sculptures were worth 800,000 pounds.</p>"+
+"<p>(2)	After the purchase, the average value was 20,000 pounds per sculpture."+"<br><br>"+
+"<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//3a
+"<div class = 'main_div'>"+
+"<p>In a bicycle garage, there are only men's, women's, and children's bikes. <strong> How many children’s bikes are there in the bike garage?</strong> </p>"+
+"<p>(1)	There are a total of 210 bikes in the bike garage, of which 4/7 are men’s bikes and 48 are women’s bikes.</p>"+
+"<p>(2)	There are 48 women’s bikes and 120 men’s bikes. 20 per cent of the total number of bikes in the bike garage are children’s bikes."+"<br><br>"+
+"<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+
+//5a
+"<div class = 'main_div'>"+
+"<p>Carola went roller skating along the boardwalk one evening. <strong>What was Carola's average speed?</strong></p>"+
+"<p>(1)	The ride along the boardwalk would take 14 minutes for a cyclist with an average speed of 30 km/h.</p>"+
+"<p>(2)	Carola started skating at 18:12. The time was 18:47 when Carola had skated along the entire boardwalk. "+"<br><br>"+
+    "<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+
+//6a
+"<div class = 'main_div'>"+
+"<p>Two persons are running a race against each other. Both start at the same time and are running at constant speeds. <strong>How much longer does it take the slower person to run 400 metres than the faster person? </strong></p>"+
+"<p>(1)	The slower person’s constant speed is 14,4 km/h.</p>"+
+"<p>(2)	After 80 seconds, when the faster person has run 400 metres, the slower person is 80 metres behind."+"<br><br>"+
+    "<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//10a   
+"<div class = 'main_div'>"+
+"<p>Arvid, Benjamin and Clara start walking simultaneously from the starting point. They walk at constant speeds around the track that is 400 metres long. <strong>After how long time will Arvid, Benjamin, and Clara pass the starting point together for the first time?</strong></p>"+
+"<p>(1)	Clara walks twice as fast as Arvid, and the average of Arvid’s and Clara’s speeds is equal to Benjamin's speed.</p>"+
+"<p>(2)	Arvid’s speed is 2 km/h, Benjamin’s is 3 km/h, and Clara’s is 4 km/h."+"<br><br>"+
+    "<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>"
+]
+const quest_dict = {
+    Q0: {text: questions[0], answer: "", correct: "B", rep_corr: null, kategori: "prop", question_id: "7a", trial_displayed: ""},
+    Q1: {text: questions[1], answer: "", correct: "C", rep_corr: null, kategori: "prop",question_id: "11a", trial_displayed: ""},
+    Q2: {text: questions[2], answer: "", correct: "D", rep_corr: null, kategori: "prop",question_id: "3a", trial_displayed: ""},
+    Q3: {text: questions[3], answer: "", correct: "C", rep_corr: null, kategori: "svt",question_id: "5a", trial_displayed: ""},
+    Q4: {text: questions[4], answer: "", correct: "B", rep_corr: null, kategori: "svt",question_id: "6a", trial_displayed: ""},
+    Q5: {text: questions[5], answer: "", correct: "B", rep_corr: null, kategori: "svt",question_id: "10a", trial_displayed: ""},
+};
+
+const questions_block3 = [
+//7b
+"<div class = 'main_div'>" +
+"<p>A retail clothing store ordered white and blue T-shirts, totalling 120 T-shirts. Unfortunately, some T-shirts were damaged when they arrived and deemed unfit to sell. <strong> How many T-shirts arrived damaged?</strong>3</p>"+
+"<p>(1)1/4 of the white T-shirts and 1/2 of the blue T-shirts were damaged. </p>"+
+"<p>(2)	30 percent of the T-shirts were damaged."+"<br><br>"+
+"<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//11b
+"<div class = 'main_div'>" +
+"<p>A film production company just bought a number of new movie cameras at a particular time. The purchase resulted in a 35 per cent increase in the total value of all the production company’s movie cameras. <strong> How many new movie cameras were purchased?</strong></p>"+
+"<p>(1)	Before the purchase, the production company’s 5 movie cameras were worth 180,000 pounds.</p>"+
+"<p>(2)	After the purchase, the average value was 36,000 pounds per movie camera."+"<br><br>"+
+"<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//3b
+"<div class = 'main_div'>"+
+"<p>A car dealership only sells cars from the brands BMW, Volvo, and Fiat. <strong> How many Fiat cars did the dealership sell in the last year?</strong></p>"+
+"<p>(1)	The car dealership sold a total of 1200 cars in the last year, of which 3/8 were BMW cars and 390 were Volvo cars.</p>"+
+"<p>(2)	The car dealership sold 390 Volvo and 450 BMW cars last year. 30 per cent of the total number of cars the dealership sold were Fiat cars."+"<br><br>"+
+"<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//5b
+"<div class = 'main_div'>"+
+"<p>Peter decided to walk down the Santa Monica Pier one morning. <strong>What was Peter’s average speed?</strong></p>"+
+"<p>(1)	It would take 2 minutes to run down the Santa Monica Pier with an average speed of 15 km/h. </p>"+
+"<p>(2)	Peter began walking at 07:45. He had walked to the end of the Santa Monica Pier when the time was 07:51."+"<br><br>"+
+    "<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+//6b
+"<div class = 'main_div'>"+
+"<p>A tortoise challenges a rabbit to a race. Both start at the same time and are traveling at constant speeds. <strong>How much longer does it take the tortoise to travel 150 metres than the rabbit?</strong></p>"+
+"<p>(1)	The tortoise’s constant speed is 2 km/h.</p>"+
+"<p>(2)	After 13,5 seconds, when the rabbit has run 150 metres, the tortoise is 142,5 metres behind."+"<br><br>"+
+    "<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>",
+
+
+//10b   
+"<div class = 'main_div'>"+
+"<p>A red, green, and blue go-kart enters the race track simultaneously and starts driving at the same time from the start line. The three go-karts drive at constant speeds around the track that is 1600 metres long. <strong>After how long time will the three go-karts drive across the start line together for the first time?</strong></p>"+
+"<p>(1)	The red go-kart drives twice as fast as the blue go-kart, and the average of the blue and red go-kart’s speed is equal to the speed of the green go-kart.</p>"+
+"<p>(2)	The speed of the blue go-kart is 40 km/h, the speed of the green go-kart is 60 km/h, and the speed of the red go-kart is 80 km/h."+"<br><br>"+
+    "<p> <strong> Sufficient information for the solution is obtained</strong></p>"+"</div>"
+]
+
+const quest_dict_block3 = {
+    Q0: {text: questions_block3[0], answer: "", correct: "B", rep_corr: null, kategori: "prop", question_id: "7b"},
+    Q1: {text: questions_block3[1], answer: "", correct: "C", rep_corr: null, kategori: "prop", question_id: "11b"},
+    Q2: {text: questions_block3[2], answer: "", correct: "D", rep_corr: null, kategori: "prop", question_id: "3b"},
+    Q3: {text: questions_block3[3], answer: "", correct: "C", rep_corr: null, kategori: "svt", question_id: "5b"},
+    Q4: {text: questions_block3[4], answer: "", correct: "B", rep_corr: null, kategori: "svt", question_id: "6b"},
+    Q5: {text: questions_block3[5], answer: "", correct: "B", rep_corr: null, kategori: "svt", question_id: "10b"},
+};
+
+
+const instr = {
+    instr_1: "<h1> <strong>PHASE 1: </strong>six data-sufficiency questions</h1>"+
+    "<p> You will now be presented with six data-sufficiency questions for you to solve. Each data sufficiency question consists of a problem followed by two individual statements labelled (1) and (2), which contain additional information.<strong>Your task</strong> is to decide whether the individual statements provide sufficient information separately to solve the problem or if you need to combine the two statements.</p>"+
+    "<p> Each question will appear on the screen one at a time. The questions are multiple-choice questions, and you will find the answer choices listed below the question on the screen. Please choose which one of the five answer choices you believe is correct.</p>"+
+    "<p> You have <strong>10 minutes</strong> to complete this first phase. To keep track of the time, a countdown timer will appear in the upper right corner of the screen.</p>"+
+    "<p>  After completing all six questions, you will proceed to the second phase of the experiment.</p>"+
+    "<p>  Please click on <strong>Continue</strong> to begin.</p>",
+
+    instr_2: "<h1> <strong>PHASE 2: </strong>Argumentation</h1>"+
+    "<p> In the second phase of the experiment, you will be presented with four of the six data-sufficiency questions you solved in the first phase. The four questions will be accompanied by the answer you gave. </p>"+
+    "<p> We are interested in understanding how you solved each question. Please elaborate on the reasoning behind your chosen answer, including how you tackled the problem and what strategy you used.</p>"+
+    "<p> It is alright for you to change your answer to the question in light of you writing down your reasoning. Clearly state in your text that you want to change your answer to a different alternative, what that new answer is, and why.</p>"+
+    "<p>After completing all four questions, you will proceed to the third phase of the experiment.</p>"+
+    "<p>Note that the questions may not be presented in the same order as before.</p>"+
+    "<p>Please click on <strong>Continue</strong> to begin.</p>",
+
+
+    instr_3: "<h1> <strong>PHASE 3: </strong>six new data-sufficiency questions</h1>"+
+    "<p>This is the third and final phase of the experiment. You will now be asked to solve six new data-sufficiency questions. This phase is identical to phase one. For each question, please choose the answer choice you believe is correct.</p>"+
+    "<p>Your time limit to solve all six questions is <strong>10 minutes</strong>.</p>"+
+    "<p>Please click on <strong>Continue</strong> to begin.</p>"
+}
+const startingMinutes = 10;
+const contdownEl = document.getElementById('count_down_number');
+const contdownEl_block3 = document.getElementById('count_down_number_block3');
+//------------------------------------------------FUNCTIONS-----------------------------------------------------------------//
+function updateCountdown() {
+        const minutes = Math.floor(time_min / 60);
+        var seconds = time_min % 60;
+        contdownEl.innerHTML = `${minutes}:${seconds}`;
+        time_min--; 
+    }
+
+function updateCountdown_block3() {
+        const minutes = Math.floor(time_min_block3 / 60);
+        var seconds = time_min_block3 % 60;
+        contdownEl_block3.innerHTML = `${minutes}:${seconds}`;
+        time_min_block3--; 
+    }    
+
+function get_answer_string(inputString){
+    var startIndex = inputString.indexOf(':') + 2; // Adding 2 to skip ':' and the space
+    var endIndex = inputString.indexOf(')');
+    var extractedString = inputString.substring(startIndex, endIndex);
+    return extractedString
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+
+function selectRandomElement(inputArray, inputString) {
+    // Filter out the input string from the array
+    var remainingElements = inputArray.filter(function(element) {
+        return element !== inputString;
+    });
+    
+    // Select a random element from the remaining elements
+    var randomIndex = Math.floor(Math.random() * remainingElements.length);
+    var randomElement = remainingElements[randomIndex];
+    
+    return randomElement;
+}
+
+
+
+function trialOrderManip(questDict){
+    var keys = Object.keys(questDict); 
+    keys = shuffleArray(keys);
+    trial_order = new Array(4).fill(0);
+  
+    var kategori = ["svt", "prop"];
+    kategori = shuffleArray(kategori)
+    console.log("Manipulationskategori: ", kategori[0]);
+
+    andra_kategori_keys = []; 
+    rätt_i_manip_kategori = [];
+
+    console.log("original keys :", keys);
+    var wrong_count = 0;
+    var manip_index = shuffleArray([1,3]); //We manipulate on the second and fourth trial. 
+    var manip_index_idx = 0;
+    
+
+    for (key in keys){
+        if ((questDict[`${keys[key]}`]['rep_corr'] == 0) && (wrong_count < 2) && questDict[`${keys[key]}`]['kategori'] === kategori[0]){
+            console.log(`${keys[key]} is wrong`, "and of category: ", kategori[0]);
+            trial_order[manip_index[manip_index_idx]] = keys[key]
+            manip_index_idx++
+            wrong_count++
+        }
+        if  (questDict[`${keys[key]}`]['kategori'] === kategori[0] && questDict[`${keys[key]}`]['rep_corr'] == 1){rätt_i_manip_kategori.push(keys[key])}
+        if  (questDict[`${keys[key]}`]['kategori'] === kategori[1]){andra_kategori_keys.push(keys[key])}
+    }
+    andra_kategori_keys.pop() //remove last element from non-manip category so that there are only 2. 
+    console.log("andra-kategori-nyklar", andra_kategori_keys);
+    console.log("'rätta' nyklar från manipkateogri: ", rätt_i_manip_kategori); 
+
+    //Make it so that there is always 2 of each category in the trial sequence. 
+    //add two random questions from non-manip category and depending on the wrong_count variable add 2,1 or 0 additional manip questions.
+    
+    rätt_i_manip_kategori.pop()
+    //Case 1: If every manip quesiton is correct, there will be 3 in the rätt_i_manip_kategori, so we remove one element. 
+    //Case 2: If one is wrong we need only one more manip question, and there will be 2 questions in the rätt_i_manip_kategori 
+    //so we once again remove 1. 
+    //Case 3: If 2 are wrong we need no more manip questions, and there will be 1 question in the rätt_i_manip_kategori 
+    //so once again we remove this 1 element since we dont need it.  
+    console.log("Rätt nycklar efter vi har rensat", rätt_i_manip_kategori);
+
+    var kombinerad = andra_kategori_keys.concat(rätt_i_manip_kategori);
+    shuffleArray(kombinerad)
+    console.log("kombinerad lista: ", kombinerad)
+    var idx = 0;
+    for (let i = 0; i < trial_order.length; i++) {
+        if (trial_order[i] === 0) {
+            trial_order[i] = kombinerad[idx];
+            idx++
+            }
+    }
+
+    return trial_order
+}
+
+
+
+//------------------------------------------------EXPERIMENT VARIABLES------------------------------------------------------//
+var timeline = [];
+var NOG_trials_stimuli = [];
+var NOG_trials_stimuli_block3 = [];
+var trial = 0;
+var trial_displayed = 1;
+var consenting_end = null;
+
+//block one time variables
+var time_min = 10 * 60;
+var trial_duration_ms = time_min * 1000;
+var intervalId = null;
+//block one time variables
+
+//block 3 time variables
+var time_min_block3 = 10 * 60;
+var trial_duration_ms_block3 = time_min_block3 * 1000;
+var intervalId_block3 = null;
+//block 3 time variables
+
+var choice_dur = 0;
+var manipulation_check = null;
+var trial_order = shuffleArray(Object.keys(quest_dict));
+var manipulation_index = [false, true, false, true];
+var countdownContainer = document.querySelector('.countdown-container');
+//------------------------------------------------EXPERIMENT OBJECTS--------------------------------------------------------//
+
+var instructions_1 = {
+        type: "html-button-response",
+        choices: ["Continue"],
+        stimulus: instr['instr_1'],
+        data: {screenid: 'instructions_1'},
+      };
+timeline.push(instructions_1);
+
+var first_attention = {
+    type: 'survey-multi-choice-custom',
+    preamble: "<p style = 'font-size: 20px;'>This question is to check your attention only. When asked about your favourite sport, please select ‘disc golf’.</p>" +
+    "<p>You will be presented with the first data-sufficiency question after this attention check.</p>",
+    questions:  [
+    {prompt: "<p><strong>Based on the text you read above, what is your favourite sport?</strong></p>",
+    options: ["Football", "Hockey", "Disc golf", "Volleyball", "Other"]}
+    ],
+}
+
+timeline.push(first_attention);
+
+for (let j = 0; j < questions.length; j++){
+    NOG_trials_stimuli.push(
+    {
+    questions: [
+    {prompt: `<p class = 'question_number'><strong>Question ${trial_displayed}</strong></p>`+ quest_dict[trial_order[j]]['text'],
+    options: nog_answers}
+    ]
+    }
+    );
+    quest_dict[trial_order[j]]['trial_displayed'] = trial_displayed
+    trial_displayed++
+}
+
+var call_timer = {
+    type: 'call-function',
+    func: function(){
+        document.querySelector('.countdown-container').style.display = 'block';
+        intervalId = setInterval(updateCountdown, 1000);
+        return intervalId 
+    }
+}
+timeline.push(call_timer);
+
+
+var min_10_block = {
+  type: 'survey-multi-choice-custom',
+  trial_duration: function(data){   
+    trial_duration_ms = (time_min * 1000) + 2000;
+    console.log("second_ms variable: ", trial_duration_ms);
+    console.log("first_sec variable: ",  time_min);
+    return trial_duration_ms
+  },
+  on_finish: function(data) {
+    choice_dur = data.rt
+    data.trial = trial;
+    console.log(trial);    
+    if (data.responses == undefined){console.log("no response")}
+    else{
+    quest_dict[trial_order[trial]]['answer'] = get_answer_string(data.responses)
+    if (quest_dict[trial_order[trial]]['answer'] == quest_dict[trial_order[trial]]['correct']){
+        quest_dict[trial_order[trial]]['rep_corr']=1
+    }
+    
+    else{
+        quest_dict[trial_order[trial]]['rep_corr']=0}
+    }
+
+    console.log(quest_dict);
+    trial++
+    trial_displayed++
+    console.log(trial_duration_ms);
+
+    if (time_min <= 0) {
+        jsPsych.endCurrentTimeline()
+        console.log("TIME IS OUT FOR BLOCK 1");
+    }
+
+  },
+  timeline: NOG_trials_stimuli
+}
+timeline.push(min_10_block);
+
+var end_timer = {
+    type: 'call-function',
+    func: function(){
+        document.querySelector('.countdown-container').style.display = 'none';
+        clearInterval(intervalId); // clear the interval using the stored ID value
+        console.log('This timeline has finished. DISABLING TIMER')
+    }
+}
+timeline.push(end_timer);
+
+var instructions_2 = {
+        type: "html-button-response",
+        choices: ["Continue"],
+        stimulus: instr['instr_2'],
+        data: {screenid: 'instructions_2'},
+        on_finish: function(data){
+            trial_order = trialOrderManip(quest_dict);
+            console.log("trial_order: ", trial_order);
+            trial = 0;
+        }
+      };
+timeline.push(instructions_2);
+
+var second_attention = {
+    type: 'survey-multi-choice-custom',
+    questions:  [
+    {prompt: "<p><strong>Please select ‘strongly agree’ to demonstrate that you are paying attention.</strong></p>"+
+    "<p>Phase 2 of the experiment will start immediately after this attention check.</p>",
+    options: ["Strongly agree", "Agree", "Disagree", "Strongly disagree"]}
+    ],
+}
+
+timeline.push(second_attention);
+
+for (let j = 0; j < 4; j++){
+    var explanation = {
+        type: 'survey-text-custom',
+        preamble: function(){
+            displayed_trial = quest_dict[trial_order[trial]]['trial_displayed']
+
+            if (manipulation_index[trial]){
+                console.log("MANIPULATED trial")
+                var real_answer = quest_dict[trial_order[trial]]['answer']
+                console.log(`REAL ANSWER TO QUESTION ${trial_order[trial]}:`, real_answer);
+                var manip_answer = quest_dict[trial_order[trial]]['correct']
+                console.log("MANIPULATED ANSWER: ", manip_answer);
+    
+                var stim = 
+                "<div class = 'main_div'>"+
+                `<p class = 'question_number'><strong> Question ${displayed_trial}:</strong>` +
+                quest_dict[trial_order[trial]]['text']+
+                "</div>"+
+            
+                "<strong>Your answer:</strong>" + nog_answers_dict[manip_answer]
+             
+                console.log("trial: ", trial);
+                trial = trial +1
+                return stim
+                
+                }else{
+                   
+                console.log(trial);
+                var real_answer = quest_dict[trial_order[trial]]['answer']
+                console.log(real_answer);
+
+                var stim = 
+                "<div class = 'main_div'>"+
+                `<p class = 'question_number'><strong> Question ${displayed_trial}:</strong>` +
+                quest_dict[trial_order[trial]]['text']+
+                "</div>"+
+                
+                "<strong>Your answer:</strong>" + nog_answers_dict[real_answer]
+                console.log("trial: ", trial);
+                trial = trial +1
+       
+                return stim
+                }
+            },
+        
+        questions: [
+            {
+          prompt: "<div class='main_div'>" +
+                  "<p class = 'explanation_text'><strong>Explain in detail the reasoning behind your selected response.</strong></p>" +
+                  "</div>",
+          rows: 8,
+          columns: 40
+            }],
+        on_finish:function(data){
+            data.manip_trial = manipulation_index[trial]
+        }
+        }
+    timeline.push(explanation);
+    }
+    
+    var instructions_3 = {
+        type: "html-button-response",
+        choices: ["Continue"],
+        stimulus: instr['instr_3'],
+        data: {screenid: 'instructions_3'},
+        on_finish: function(data){
+            trial = 0;    
+        }
+      };
+timeline.push(instructions_3);
+
+var call_timer_block3 = {
+    type: 'call-function',
+    func: function(){
+        document.querySelector('.countdown-container_block3').style.display = 'block';
+        return setInterval(updateCountdown_block3, 1000);
+    }
+}
+timeline.push(call_timer_block3);
+
+for (let j = 0; j < questions_block3.length; j++){
+    NOG_trials_stimuli_block3.push(
+    {questions: [
+    {prompt: `<p class = 'question_number'><strong>Question ${trial_displayed}</strong></p>`+ quest_dict_block3[trial_order[j]]['text'],
+    options: nog_answers}]
+    }
+    );
+    trial_displayed++
+}
+
+var min_10_block3 = {
+  type: 'survey-multi-choice-custom',
+  trial_duration: function(data){   
+    trial_duration_ms = (time_min_block3 * 1000) + 2000;
+    console.log("second_ms variable: ", trial_duration_ms_block3);
+    console.log("first_sec variable: ",  time_min_block3);
+    return trial_duration_ms
+  },
+  timeline: NOG_trials_stimuli_block3,
+  on_finish: function(data){
+
+
+
+
+    if (time_min_block3 <= 0) {
+        jsPsych.endCurrentTimeline()
+        console.log("TIME IS OUT FOR BLOCK 3");
+    }
+  }
+}
+timeline.push(min_10_block3);
+
+var end_timer_block3 = {
+    type: 'call-function',
+    func: function(){
+        document.querySelector('.countdown-container_block3').style.display = 'none';
+        console.log('This timeline has finished. DISABLING TIMER')
+    }
+}
+timeline.push(end_timer_block3);
+
+//ENDING QUESTIONS AND CONSENT
+
+var end_exp = {
+        type: "html-button-response",
+        choices: ["Continue"],
+        stimulus: "<div class = 'main_div' style = position: relative; top: 20%>"+
+            "<h1> The main part of the experiment is completed.</h1>"+
+"<p>You will now be asked to answer a few questions. </p>"+
+"<p>Please note that answers to these questions are an important part of the experiment.</p>"+
+"<p>We need your honest responses for further analyses. The content of your answers here will not have any consequences on the validation of your participation and subsequent earning of monetary reward.</p>"+
+"<p>Please click on <strong>Continue</strong> to begin.</p>"+ "</div>"
+        }
+timeline.push(end_exp);
+
+
+var general_experience = {
+        type: 'survey-text',
+        questions: [
+            {
+          prompt: "<div class='main_div'>" +
+                  "<p class = 'explanation_text'><strong>What are your general thoughts on the experiment?</strong></p>" +
+                  "</div>",
+          rows: 8,
+          columns: 40
+            }],
+        }
+timeline.push(general_experience);
+
+var purpose_exp = {
+        type: 'survey-text',
+        questions: [
+            {
+          prompt: "<div class='main_div'>" +
+                  "<p class = 'explanation_text'><strong> What do you believe the purpose of the experiment was?</strong></p>" +
+                  "</div>",
+          rows: 8,
+          columns: 40
+            }],
+        }
+timeline.push(purpose_exp);
+
+button_array=['<button class="button1">My answers were changed.</button>', '<button class="button2">My answers were not changed.</button>'];
+
+var manipulation_check = {
+    type: "html-button-response",
+    button_html: button_array,
+    choices: ["My answers were changed.", "My answers were not changed."],
+    stimulus: "<div class='main_div'>" +
+        "<p>There were two versions of this experiment. You have been randomly selected into one of the two versions. In the second phase of the experiment, you were asked to state your reasons for answering the way you did. In one version of the experiment, some of your answers to the questions from phase one were changed to a different answer choice. In the other version of the experiment, we did not change your answers.</p>"+
+        "<br> <br>"+
+        "<p class = 'explanation_text'><strong> Which version of the experiment do you believe you have taken part in?</strong></p>" +
+        "</div>",
+    on_finish: function(data){
+        manipulation_check = data.button_pressed;
+    }
+}
+timeline.push(manipulation_check);
+
+
+var manip_explanation = {
+    type: 'survey-text',
+    questions: [
+        {
+        prompt: "<div class='main_div'>" +
+                "<p class = 'explanation_text'><strong>  How many answers do you think were changed?</strong></p>" +
+                "</div>",
+        rows: 8,
+        columns: 40
+        }],
+}
+
+if_node = {
+    timeline: [manip_explanation],
+    conditional_function: function(){
+        // get the data from the previous trial,
+        // and check which key was pressed
+        if (manipulation_check == 0){
+            return true
+        }
+        else{return false}
+    }
+}
+timeline.push(if_node);
+
+var debriefing={
+    type: "html-button-response",
+    choices: ["Continue"],
+            stimulus:"<div class='main_div'>"+
+        "<h1>Information about the experiment</h1>"+
+        "<p> Thank you for your participation in today’s study. In addition to studying problem-solving and problem-solving procedures, we also study how aware people are of the reasons behind their choices."+
+        " This experiment manipulated up to two of the six data-sufficiency questions you solved in the first phase. The answers to the questions were swapped, which means that approximately two times when you answered a data-sufficiency question, we asked you to give reasons for an answer you did not choose. </p>"+
+        "<p> The number of manipulated trials depended on how many data-sufficiency questions you answered incorrectly since we only manipulated to the correct answer for that question."+
+        "We were interested to see to what extent you would detect this manipulation and to examine how the acceptance of the manipulation would affect your performance on a logically related subsequent problem, expressed during the third phase when you solved another round of data-sufficiency questions."+
+        "<br> <br>Most people fail most of the time to detect the manipulation. This phenomenon is called choice blindness. It refers to the fact that we often do not notice when the outcome of our choice does not correspond to the one we intended, and further that we spontaneously find reasons to explain a choice we did not make. This purports to show that we are often unaware of the reasons behind our choices."+
+        "<br> <br>You can find more information <a href='https://www.lucs.lu.se/research/choice-blindness-lab/home/' target='_blank'>here</a>"+
+        " or contact us here: petter.johansson@lucs.lu.se"+
+        "<br> <br>Finally, please DO NOT spread the word to people who would likely participate in this experiment, as the phenomenon relies on people not expecting a manipulation to take place"+
+        "<br> <br> Please press <strong>Continue</strong> to go to the consent form and the completion link"+
+        "</p></div>",
+data: {screenid: 'debriefing'},
+};
+timeline.push(debriefing);
+
+
+button_consent=['<button class="button1">I refuse to give my consent</button>', '<button class="button2">I understand and agree with the information above</button>'];
+var consent = {
+    type: "html-button-response",
+    button_html: button_consent,
+    choices: ["I refuse to give my consent", "I understand and agree with the information above"],
+    stimulus:"<div class='main_div'>"+
+    "<h1><strong>Consent form</strong></h1>"+
+    "<p> Thank you for your participation! By clicking the agree button, you acknowledge that:"+
+    "<br> <br> -	You have received a description of the purpose of the experiment and have decided not to destroy your trial data."+
+    "<br> <br> -	You have been informed that on some trials you were shown a choice different from the one you actually had made. This deception was necessary to compare your response to receiving true or correct information during this stage of the experiment."+
+    "<br> <br> -	You understand that the trial data is completely anonymized and that it as such can be requested, in accordance with Swedish legislation, by external researchers who wish to investigate it."+
+    "<br> <br> -	You understand that we have collected information about you, but that this information will not be stored together with any information that can be linked to your identity."+
+    "<br> <br> -	You understand that you have the right to request that your data will be deleted at any point."+
+    "<br> <br> -	You understand that you are entitled to get your monetary reward despite asking your data to be deleted"+
+    "<br> <br> <br> <br> after clicking on the agree button, the completion link will open in a new tab"+
+    "</p></div>",
+
+    data: {screenid: 'consent'},
+    on_finish:function(data){consenting_end=data.button_pressed},
+};
+timeline.push(consent);
+
+
+jsPsych.init({
+    show_progress_bar: true,
+    timeline: timeline,
+    display_element: 'jspsych-target',
+    on_finish: function() {
+        jsPsych.data.displayData('csv');
+        window.open("https://app.prolific.co/submissions/complete?cc=CJPYOCIH");
+    }
+    })
+
+</script>
+
+</html>
