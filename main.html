@@ -22,7 +22,7 @@
 <body>
     <div id="jspsych-target"></div>
     <!-- Styling of timer -->
-    <div class="countdown-container" style = "display: none;">
+    <div class = "countdown-container" style = "display: none;">
     <p id = "count_down_text" >Time left: </p>
     <p id = "count_down_number" >10:00</p>
     </div>
@@ -222,8 +222,6 @@ function selectRandomElement(inputArray, inputString) {
     return randomElement;
 }
 
-
-
 function trialOrderManip(questDict){
     var keys = Object.keys(questDict); 
     keys = shuffleArray(keys);
@@ -290,32 +288,35 @@ xhr.send(JSON.stringify({filename: name+"_attempted", filedata: data}));
 }
 
 //------------------------------------------------EXPERIMENT VARIABLES------------------------------------------------------//
-var timeline = [];
-var NOG_trials_stimuli = [];
+var timeline                  = [];
+var NOG_trials_stimuli        = [];
 var NOG_trials_stimuli_block3 = [];
-var trial = 0;
-var trial_displayed = 1;
-var consenting_end = null;
+var trial                     = 0;
+var trial_displayed           = 1;
+var consenting_end            = null;
 
 //block one time variables
-var time_min = 10 * 60;
+var time_min          = 10 * 60;
 var trial_duration_ms = time_min * 1000;
-var intervalId = null;
+var intervalId        = null;
 //block one time variables
 
 //block 3 time variables
-var time_min_block3 = 10 * 60;
+var time_min_block3          = 10 * 60;
 var trial_duration_ms_block3 = time_min_block3 * 1000;
-var intervalId_block3 = null;
+var intervalId_block3        = null;
 //block 3 time variables
 
-var choice_dur = 0;
-var manipulation_check = null;
-var trial_order = shuffleArray(Object.keys(quest_dict));
-var manipulation_index = [false, true, false, true];
-var countdownContainer = document.querySelector('.countdown-container');
+
+var choice_dur_block1   = 0;
+var manipulation_check  = null;
+var trial_order         = shuffleArray(Object.keys(quest_dict));
+var manipulation_index  = [false, true, false, true];
+var countdownContainer  = document.querySelector('.countdown-container');
+var attention_answer_1  = null; 
 
 //other variables
+/*
 var prolificID = null;
     /////////////////////////////prolificID.length < 24 for exp
     while (prolificID == null || prolificID == "" || prolificID.length < 24) {
@@ -326,6 +327,7 @@ var subject=prolificID;
 var d = new Date();
 var today=d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()+' '+d.getHours()+':'+d.getMinutes();
 var filename=subject+'_'+d.getFullYear() + '_' + (d.getMonth()+1) + '_' + d.getDate()+'_'+d.getHours()+'_'+d.getMinutes();
+*/
 //------------------------------------------------EXPERIMENT OBJECTS--------------------------------------------------------//
 
 var instructions_1 = {
@@ -333,7 +335,7 @@ var instructions_1 = {
         choices: ["Continue"],
         stimulus: instr['instr_1'],
         data: {screenid: 'instructions_1'},
-        on_finish: function(){jsPsych.data.addProperties({subject: subject, date: today})}
+        //on_finish: function(){jsPsych.data.addProperties({subject: subject, date: today})}
       };
 timeline.push(instructions_1);
 
@@ -345,15 +347,13 @@ var first_attention = {
     {prompt: "<p><strong>Based on the text you read above, what is your favourite sport?</strong></p>",
     options: ["Football", "Hockey", "Disc golf", "Volleyball", "Other"]}
     ],
+    on_finish: function(data){
+        data.attention_answer_1 = Object.values(JSON.parse(data.responses))[0]
+    }
 }
 
 timeline.push(first_attention);
 
-var write_data_attempted = {
-          type: 'call-function',
-          func: function(){saveData_attempted(filename, jsPsych.data.get().csv())}
-      }
-timeline.push(write_data_attempted);
 
 for (let j = 0; j < questions.length; j++){
     NOG_trials_stimuli.push(
@@ -388,29 +388,42 @@ var min_10_block = {
     return trial_duration_ms
   },
   on_finish: function(data) {
-    choice_dur = data.rt
-    data.trial = trial;
+    choice_dur_block1 = data.rt
+    data.trial        = trial;
     console.log(trial);    
     if (data.responses == undefined){console.log("no response")}
     else{
     quest_dict[trial_order[trial]]['answer'] = get_answer_string(data.responses)
     if (quest_dict[trial_order[trial]]['answer'] == quest_dict[trial_order[trial]]['correct']){
-        quest_dict[trial_order[trial]]['rep_corr']=1
+        quest_dict[trial_order[trial]]['rep_corr'] = 1
     }
     
     else{
         quest_dict[trial_order[trial]]['rep_corr']=0}
     }
 
+
+    //Save data
+    data.question_id     = quest_dict[trial_order[trial]]['question_id']
+    data.category        = quest_dict[trial_order[trial]]['kategori']
+    data.answer          = quest_dict[trial_order[trial]]['answer']
+    data.correct_answer  = quest_dict[trial_order[trial]]['correct']
+    data.answer_correct  = quest_dict[trial_order[trial]]['rep_corr']
+    data.trial_displayed = quest_dict[trial_order[trial]]['trial_displayed']
+
+
     console.log(quest_dict);
     trial++
     trial_displayed++
-    console.log(trial_duration_ms);
+    console.log(trial_duration_ms)
 
     if (time_min <= 0) {
         jsPsych.endCurrentTimeline()
         console.log("TIME IS OUT FOR BLOCK 1");
     }
+
+
+
 
   },
   timeline: NOG_trials_stimuli
@@ -447,6 +460,7 @@ var second_attention = {
     "<p>Phase 2 of the experiment will start immediately after this attention check.</p>",
     options: ["Strongly agree", "Agree", "Disagree", "Strongly disagree"]}
     ],
+    on_finish: function(data){data.attention_answer_2 = Object.values(JSON.parse(data.responses))[0]}
 }
 
 timeline.push(second_attention);
@@ -459,7 +473,7 @@ for (let j = 0; j < 4; j++){
 
             if (manipulation_index[trial]){
                 console.log("MANIPULATED trial")
-                var real_answer = quest_dict[trial_order[trial]]['answer']
+                var real_answer  = quest_dict[trial_order[trial]]['answer']
                 console.log(`REAL ANSWER TO QUESTION ${trial_order[trial]}:`, real_answer);
                 var manip_answer = quest_dict[trial_order[trial]]['correct']
                 console.log("MANIPULATED ANSWER: ", manip_answer);
@@ -551,8 +565,6 @@ var min_10_block3 = {
   },
   timeline: NOG_trials_stimuli_block3,
   on_finish: function(data){
-
-
 
 
     if (time_min_block3 <= 0) {
