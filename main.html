@@ -281,7 +281,13 @@ function trialOrderManip(questDict){
     return trial_order
 }
 
-
+//to check attempts to do the exp
+function saveData_attempted(name, data){
+var xhr = new XMLHttpRequest();
+xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+xhr.setRequestHeader('Content-Type', 'application/json');
+xhr.send(JSON.stringify({filename: name+"_attempted", filedata: data}));
+}
 
 //------------------------------------------------EXPERIMENT VARIABLES------------------------------------------------------//
 var timeline = [];
@@ -308,6 +314,18 @@ var manipulation_check = null;
 var trial_order = shuffleArray(Object.keys(quest_dict));
 var manipulation_index = [false, true, false, true];
 var countdownContainer = document.querySelector('.countdown-container');
+
+//other variables
+var prolificID = null;
+    /////////////////////////////prolificID.length < 24 for exp
+    while (prolificID == null || prolificID == "" || prolificID.length < 24) {
+  prolificID = prompt("Please enter your Prolific ID (24 symbols)", "");
+  }
+
+var subject=prolificID;
+var d = new Date();
+var today=d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate()+' '+d.getHours()+':'+d.getMinutes();
+var filename=subject+'_'+d.getFullYear() + '_' + (d.getMonth()+1) + '_' + d.getDate()+'_'+d.getHours()+'_'+d.getMinutes();
 //------------------------------------------------EXPERIMENT OBJECTS--------------------------------------------------------//
 
 var instructions_1 = {
@@ -315,6 +333,7 @@ var instructions_1 = {
         choices: ["Continue"],
         stimulus: instr['instr_1'],
         data: {screenid: 'instructions_1'},
+        on_finish: function(){jsPsych.data.addProperties({subject: subject, date: today})}
       };
 timeline.push(instructions_1);
 
@@ -329,6 +348,12 @@ var first_attention = {
 }
 
 timeline.push(first_attention);
+
+var write_data_attempted = {
+          type: 'call-function',
+          func: function(){saveData_attempted(filename, jsPsych.data.get().csv())}
+      }
+timeline.push(write_data_attempted);
 
 for (let j = 0; j < questions.length; j++){
     NOG_trials_stimuli.push(
